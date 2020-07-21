@@ -37,9 +37,9 @@ const ProductsOverviewScreen = ({ navigation }) => {
     }, [dispatch]);
 
     useEffect(() => {
-        const willFocusSub = navigation.addListener('willFocus', loadProducts)
+        const unsubscribe = navigation.addListener('focus', loadProducts)
         return () => {
-            willFocusSub.remove();
+            unsubscribe();
         }
     }, [loadProducts]);
 
@@ -81,7 +81,7 @@ const ProductsOverviewScreen = ({ navigation }) => {
     />
 };
 
-ProductsOverviewScreen.navigationOptions = navData => ({
+export const screenOptions = navData => ({
     headerTitle: 'All Products',
     headerLeft: () => <HeaderButtons HeaderButtonComponent={HeaderButton} >
         <Item

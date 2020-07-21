@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useReducer } from 'react';
+import React, { useState, useEffect, useCallback, useReducer, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { View, ScrollView, Button, KeyboardAvoidingView, Alert, StyleSheet, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -30,11 +30,13 @@ const formReducer = (state, action) => {
     return state;
 }
 
-const AuthScreen = ({ navigation }) => {
+const AuthScreen = () => {
     const [isSignup, setIsSignup] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
     const dispatch = useDispatch();
+
+    const passwordRef = useRef(null);
 
     const [formState, dispatchFormState] = useReducer(formReducer, {
         inputValues: {
@@ -74,7 +76,6 @@ const AuthScreen = ({ navigation }) => {
             } else {
                 await dispatch(login(formState.inputValues.email, formState.inputValues.password));
             }
-            navigation.navigate('Shop');
         } catch (err) {
             setError(err.message)
             setIsLoading(false);
@@ -91,9 +92,13 @@ const AuthScreen = ({ navigation }) => {
         }
     }, [error]);
 
+    const onNextInputFocus = useCallback(() => {
+        passwordRef.current.focus()
+    }, [passwordRef]);
+
     return (
         <KeyboardAvoidingView
-            behavior='padding'
+            behavior={Platform.OS == "ios" ? "padding" : "height"}
             keyboardVerticalOffset={10}
             style={styles.container}
         >
@@ -109,11 +114,14 @@ const AuthScreen = ({ navigation }) => {
                             keyboardType='email-address'
                             autoCapitalized='none'
                             onInputChange={TextChangeHandler}
+                            blurOnSubmit={false}
+                            onSubmitEditing={onNextInputFocus}
                             initialValue={formState.inputValues.email}
                         />
                         <Input
                             id='password'
                             label='Password'
+                            ref={passwordRef}
                             password
                             secureTextEntry
                             required
@@ -147,7 +155,7 @@ const AuthScreen = ({ navigation }) => {
     )
 };
 
-AuthScreen.navigationOptions = navData => ({
+export const screenOptions = navData => ({
     headerTitle: 'Authentication'
 })
 
