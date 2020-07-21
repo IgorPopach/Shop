@@ -3,26 +3,25 @@ import { useDispatch } from 'react-redux';
 import { View, ActivityIndicator, StyleSheet, AsyncStorage } from 'react-native';
 
 import Colors from '../constants/Colors';
-import { storeUser } from '../store/actions/auth';
+import { storeUser, setDidTryAL } from '../store/actions/auth';
 
-const StartupScreen = ({ navigation }) => {
+const StartupScreen = () => {
     const dispatch = useDispatch();
     useEffect(() => {
         const tryLogin = async () => {
             const userData = await AsyncStorage.getItem('userData');
             if (!userData) {
-                navigation.navigate('Auth');
+                dispatch(setDidTryAL());
                 return;
             };
             const transformedData = JSON.parse(userData);
             const { token, userId, expirationDate } = transformedData;
             if (new Date(expirationDate) <= new Date() || !token || !userId) {
-                navigation.navigate('Auth');
+                dispatch(setDidTryAL());
                 return;
             };
 
             const expirationTime = new Date(expirationDate).getTime() - new Date().getTime();
-            navigation.navigate('Shop');
             dispatch(storeUser({ token, userId }, expirationTime));
         };
 

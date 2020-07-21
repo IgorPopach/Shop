@@ -4,8 +4,13 @@ import { API_KEY } from '../../constants/firebase';
 
 export const STORE_USER = 'STORE_USER';
 export const LOGOUT = 'LOGOUT';
+export const SET_DID_TRY_AL = 'SET_DID_TRY_AL';
 
 let timer;
+
+export const setDidTryAL = () => ({
+    type: SET_DID_TRY_AL
+});
 
 export const storeUser = (data, expiryTime) => dispatch => {
     dispatch(setLogoutTimer(expiryTime));

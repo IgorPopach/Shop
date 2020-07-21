@@ -21,7 +21,7 @@ const inputReducer = (state, { type, value, isValid }) => {
     return state;
 };
 
-const Input = ({ id, label, isValid, initialValue, errorText, onInputChange, ...props }) => {
+const Input = React.forwardRef(({ id, label, isValid, initialValue, errorText, onInputChange, ...props }, ref) => {
     const [inputState, dispatch] = useReducer(inputReducer, {
         value: initialValue || '',
         isValid,
@@ -62,6 +62,7 @@ const Input = ({ id, label, isValid, initialValue, errorText, onInputChange, ...
             <View style={styles.formControl}>
                 <Text style={styles.label}>{label}</Text>
                 <TextInput
+                    ref={ref}
                     style={styles.textInput}
                     {...{ value: inputState.value, onChangeText, onBlur, ...props }}
                 />
@@ -72,7 +73,7 @@ const Input = ({ id, label, isValid, initialValue, errorText, onInputChange, ...
                 </View>)}
         </View>
     );
-};
+});
 
 const styles = StyleSheet.create({
     formControl: {

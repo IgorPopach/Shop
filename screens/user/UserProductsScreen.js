@@ -59,7 +59,7 @@ const UserProductsScreen = ({ navigation }) => {
     />
 };
 
-UserProductsScreen.navigationOptions = navData => ({
+export const screenOptions = navData => ({
     headerTitle: 'Your Products',
     headerLeft: () => <HeaderButtons HeaderButtonComponent={HeaderButton} >
         <Item

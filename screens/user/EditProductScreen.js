@@ -30,10 +30,10 @@ const formReducer = (state, action) => {
     return state;
 }
 
-const EditProductScreen = ({ navigation }) => {
+const EditProductScreen = ({ navigation, route }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
-    const prodId = navigation.getParam('id');
+    const prodId = route.params ? route.params.id : null;
     const editedProduct = useSelector(state =>
         state.products.userProducts.find(product => product.id === prodId));
 
@@ -100,7 +100,17 @@ const EditProductScreen = ({ navigation }) => {
     }, [dispatchFormState]);
 
 
-    useEffect(() => { navigation.setParams({ submit: submitHandler }) }, [submitHandler]);
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => <HeaderButtons HeaderButtonComponent={HeaderButton} >
+                <Item
+                    title="Add"
+                    iconName={Platform.OS === 'android' ? 'md-checkmark' : 'ios-checkmark'}
+                    onPress={submitHandler}
+                />
+            </HeaderButtons>
+        })
+    }, [submitHandler]);
 
     useEffect(() => {
         if (error) {
@@ -117,7 +127,7 @@ const EditProductScreen = ({ navigation }) => {
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
-            behavior="padding"
+            behavior={Platform.OS == "ios" ? "padding" : "height"}
             KeyboardVerticalOffset={50}
         >
             <ScrollView>
@@ -181,18 +191,10 @@ const EditProductScreen = ({ navigation }) => {
     );
 };
 
-EditProductScreen.navigationOptions = navData => {
-    const submitFunc = navData.navigation.getParam('submit');
-
+export const screenOptions = navData => {
+    const routeParams = navData.route.params ? navData.route.params : {};
     return {
-        headerTitle: navData.navigation.getParam('id') ? 'Edit Product' : 'Add Product',
-        headerRight: () => <HeaderButtons HeaderButtonComponent={HeaderButton} >
-            <Item
-                title="Add"
-                iconName={Platform.OS === 'android' ? 'md-checkmark' : 'ios-checkmark'}
-                onPress={submitFunc}
-            />
-        </HeaderButtons>
+        headerTitle: routeParams.id ? 'Edit Product' : 'Add Product',
     }
 };
 
