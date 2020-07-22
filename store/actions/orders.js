@@ -21,7 +21,25 @@ export const addNewOrder = (order, amount) => async (dispatch, getState) => {
     dispatch({
         type: ADD_NEW_ORDER,
         payload: { order, amount, id: resData.name, date }
-    })
+    });
+
+    for (const cartItem of order) {
+        const pushToken = cartItem.pushToken;
+
+        fetch('https://exp.host/--/api/v2/push/send', {
+            method: 'POST',
+            header: {
+                'Accept': 'application/json',
+                'Accept-Encoding': 'gzip, deflate',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                to: pushToken,
+                title: 'Order was placed!',
+                body: cartItem.productTitle
+            })
+        });
+    };
 };
 
 export const fetchOrders = () => async (dispatch, getState) => {

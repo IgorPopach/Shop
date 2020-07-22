@@ -9,11 +9,7 @@ npm-debug.*
 *.orig.*
 web-build/
 web-report/
-<<<<<<< HEAD
 constants/firebase.js
-=======
-constants/firebase
->>>>>>> master
 
 # macOS
 .DS_Store

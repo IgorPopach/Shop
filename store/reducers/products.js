@@ -20,10 +20,11 @@ export default (state = initialState, { type, payload }) => {
                 userProducts: state.userProducts.filter(product => product.id !== payload)
             };
         case ADD_PRODUCT:
-            const { id, title, price, description, imageUrl, ownerId } = payload;
+            const { id, title, price, description, imageUrl, ownerId, ownerPushToken } = payload;
             const newProduct = new Product(
                 id,
                 ownerId,
+                ownerPushToken,
                 title,
                 imageUrl,
                 description,

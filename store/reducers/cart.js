@@ -12,17 +12,18 @@ const initialState = {
 export default (state = initialState, { type, payload }) => {
     switch (type) {
         case ADD_TO_CART:
-            const { id, price, title } = payload;
+            const { id, price, title, pushToken } = payload;
             let updatedOrNewCartItem;
             if (state.items[id]) {
                 updatedOrNewCartItem = new CartItem(
                     state.items[id].quantity + 1,
                     price,
                     title,
+                    pushToken,
                     state.items[id].sum + price
                 )
             } else {
-                updatedOrNewCartItem = new CartItem(1, price, title, price);
+                updatedOrNewCartItem = new CartItem(1, price, title, pushToken, price);
             }
             return {
                 ...state,
@@ -39,6 +40,7 @@ export default (state = initialState, { type, payload }) => {
                     productItem.quantity - 1,
                     productItem.productPrice,
                     productItem.productTitle,
+                    productItem.pushToken,
                     productItem.sum - productItem.productPrice
                 );
                 filteredItems[payload] = updatedCartItem;

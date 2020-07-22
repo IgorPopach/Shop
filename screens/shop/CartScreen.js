@@ -14,8 +14,10 @@ const CartScreen = ({ navigation }) => {
     const dispatch = useDispatch();
     const cartItems = useSelector(state => {
         const items = state.cart.items
-        return Object.keys(items).map(key => ({ ...items[key], productId: key }))
-            .sort((a, b) => a.productId > b.productId ? 1 : -1)
+        return Object.keys(items).map(key => ({
+            ...items[key],
+            productId: key,
+        })).sort((a, b) => a.productId > b.productId ? 1 : -1)
     });
 
     const sendOrderHandler = async () => {
